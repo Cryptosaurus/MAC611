@@ -1,0 +1,38 @@
+MAC611 implementation
+(c) 2018-2019 Sébastien Duval, Gaëtan Leurent
+
+To the extent possible under law, the author(s) have dedicated all
+copyright and related and neighboring rights to this software to the
+public domain worldwide. This software is distributed without any
+warranty.
+
+* This code includes:
+- a generic C version (using 32+32->64 multiplier)
+- a GNU C version (using 64+64->128 multiplier and 128-bit integers)
+- an assembly version for ARM cortex-M0 (using 32+32->64 multiplier)
+- an assembly version for ARM cortex-M3 (using 32+32->32 multiplier)
+
+The C version can be compiler under Linux (tested on x86_64) The ARM
+assembly versions have been tested with mbedOS, using the gcc compiler
+(gcc 4 and gcc 7), with FDRM-K64F and FRDM-KL46Z boards.
+
+* To compile with mbed OS, use the following:
+
+pip install --user mbed-cli
+cd armv7M-small
+mbed new .
+mbed target K64F
+mbed toolchain GCC_ARM
+mbed compile --profile release
+
+* In order to compile with -O3 instead of -Os, you can do:
+
+perl -pe 's/"-Os"/"-O3"/' mbed-os/tools/profiles/release.json > mbed-os/tools/profiles/fast.json
+mbed compile --profile fast
+
+* In order to reduce the size of mbedOS, you can create a file named
+  mbed_app.json with the following content:
+
+{
+    "requires": ["bare-metal"]
+}
